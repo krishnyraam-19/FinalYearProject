@@ -3,12 +3,13 @@ export default function SignInForm(){
         <form className="space-x-4">
             <div>
                 <label htmlFor="email" className="block text-la font-medium text-gray-700">Email:</label>
-                <input className="mt-1 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700" type="email" name="email" id="email" placeholder="Enter your email"/>
+                <input className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700" type="email" name="email" id="email" placeholder="Enter your email"/>
             </div>
             <div>
-                <label htmlFor="email" className="block text-la font-medium text-gray-700">Email:</label>
-                <input className="mt-1 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700" type="email" name="email" id="email" placeholder="Enter your email"/>
+                <label htmlFor="password" className="mt-2 block text-la font-medium text-gray-700">Password:</label>
+                <input className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700" type="password" name="password" id="password" placeholder="Enter your password"/>
             </div>
+            <button type="submit" className="mt-5 w-full rounded-lg bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">SignIn</button>
         </form>
     )
 }
