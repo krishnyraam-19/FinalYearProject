@@ -1,39 +1,64 @@
-import { NextResponse } from "next/server";
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/user";
+import { redirect } from "next/navigation";
 
-export async function POST(request: Request) {
-  try {
-    const { fname, lname, email, phone, password } = await request.json();
+export const handler = NextAuth({
+  session: { strategy: "jwt" },
 
-    if (!fname || !lname || !email || !phone || !password) {
-      return NextResponse.json({ message: "All fields are required" }, { status: 400 });
-    }
+  providers: [
+    Credentials({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
 
-    await connectToDatabase();
+      async authorize(credentials) {
+        const email = credentials?.email as string;
+        const password = credentials?.password as string;
+        if (!email || !password) return null;
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return NextResponse.json({ message: "Email is already in use" }, { status: 409 });
-    }
+        await connectToDatabase();
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+        const user = await User.findOne({ email });
+        if (!user) return null;
 
-    await User.create({
-      fname,
-      lname,
-      email,
-      phone,
-      password: hashedPassword,
-    });
+        // const ok = await bcrypt.compare(password, user.password);
+        const ok = password === user.password;
 
-    return NextResponse.json({ message: "User created" }, { status: 201 });
-  } catch (err: any) {
-    return NextResponse.json(
-      { message: "Server error", error: err?.message ?? String(err) },
-      { status: 500 }
-    );
-  }
-}
+        console.log("password",password);
+        console.log("userPass",user.password);
+        console.log("ok",ok);
+        if (!ok) return null;
+
+        // return minimal safe fields
+        return {
+          id: user._id.toString(),
+          name: `${user.fname} ${user.lname}`,
+          email: user.email,
+        };
+      },
+    }),
+  ],
+
+  callbacks: {
+    async jwt({ token, user }) {
+      // first login only
+      if (user) token.id = (user as any).id;
+      return token;
+      redirect("/")
+    },
+    async session({ session, token }) {
+      // make user id available in client
+      (session.user as any).id = token.id;
+      return session;
+    },
+  },
+});
+
+export { handler as GET, handler as POST };
+export const runtime = "nodejs"; // b

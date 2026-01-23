@@ -1,6 +1,34 @@
+"use client"
+import { signIn } from "next-auth/react";
+
+import { useState } from "react";
+import { redirect } from 'next/navigation';
+
+
 export default function SignInForm(){
+
+    const[error, setError] = useState("");
+    const handleSubmit = async(e:any)=>{
+        e.preventDefault();
+        const email = e.target[0].value;
+        const password = e.target[1].value;
+
+        const res = await signIn("credentials",{
+            redirect:false,
+            email,
+            password
+        })
+
+        if(res?.error){
+            setError("error");
+            
+        }
+        if(res?.url) redirect("/")
+
+        }
     return(
-        <form className="space-x-4">
+        
+        <form className="space-x-4" onSubmit={handleSubmit}>
             <div>
                 <label htmlFor="email" className="block text-la font-medium text-gray-700">Email:</label>
                 <input className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700" type="email" name="email" id="email" placeholder="Enter your email"/>
