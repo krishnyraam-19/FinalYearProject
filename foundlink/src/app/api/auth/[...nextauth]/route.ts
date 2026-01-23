@@ -7,6 +7,7 @@ import User from "@/models/user";
 import { redirect } from "next/navigation";
 
 export const handler = NextAuth({
+      secret: process.env.NEXTAUTH_SECRET,
   session: { strategy: "jwt" },
 
   providers: [
