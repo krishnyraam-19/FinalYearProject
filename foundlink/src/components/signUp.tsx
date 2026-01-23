@@ -3,10 +3,14 @@
 import { POST } from "@/app/api/signUp/route";
 import { error } from "console";
 import { register } from "module";
+import { useState } from "react";
 import { useFormState } from "react-dom";
 
 export default function SignUpForm(){
     
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
+
     const handleSubmit  = async(e:any)=>{
         e.preventDefault();
         const fname = e.target[0].value;
@@ -29,6 +33,12 @@ export default function SignUpForm(){
                 password
             })
         })
+        const data =await res.json();
+        if(!res.ok){
+            setError(data.message);
+            return;
+        }
+        setSuccess("User created sccessfully")
     }
     
 
@@ -55,6 +65,8 @@ export default function SignUpForm(){
                 <input className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700" type="password" name="password" id="password" placeholder="Enter your password"/>
             </div>
             <button type="submit" className="mt-5 w-full rounded-lg bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">Sign Up</button>
+            {error && <p style={{ color: "red" }}>{error}</p>}
+            {success && <p style={{ color: "green" }}>{success}</p>}
         </form>
     )
 }
