@@ -38,7 +38,7 @@ export const handler = NextAuth({
         // return minimal safe fields
         return {
           id: user._id.toString(),
-          name: `${user.fname} ${user.lname}`,
+          name: user.fname,
           email: user.email,
         };
       },
