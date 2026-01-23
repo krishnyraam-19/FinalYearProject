@@ -2,6 +2,7 @@ import User from "@/models/user";
 
 import connectToDatabase from "@/lib/mongodb";
 import { NextResponse } from "next/server";
+import bcrypt from "bcrypt";
 
 export const POST = async (request:any)=>{
     const{fname,lname,email,phone,password} = await request.json();
@@ -13,6 +14,8 @@ export const POST = async (request:any)=>{
     if(existingUser){
         return NextResponse.json({message:"Email is already in use"},{status:400})
     }
+
+    const hashedPassword = await bcrypt.hash(password,10);
 
     const newUser = new User({
         fname,
