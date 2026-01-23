@@ -2,7 +2,7 @@ import User from "@/models/user";
 
 import connectToDatabase from "@/lib/mongodb";
 import { NextResponse } from "next/server";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export const POST = async (request:any)=>{
     const{fname,lname,email,phone,password} = await request.json();
@@ -22,7 +22,7 @@ export const POST = async (request:any)=>{
         lname,
         email,
         phone,
-        password
+        password:hashedPassword
     })
 
     try{

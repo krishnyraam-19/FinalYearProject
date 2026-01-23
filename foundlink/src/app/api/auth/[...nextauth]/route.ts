@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/user";
@@ -27,8 +27,8 @@ export const handler = NextAuth({
         const user = await User.findOne({ email });
         if (!user) return null;
 
-        // const ok = await bcrypt.compare(password, user.password);
-        const ok = password === user.password;
+        const ok = await bcrypt.compare(password, user.password);
+        // const ok = password === user.password;
 
         console.log("password",password);
         console.log("userPass",user.password);
