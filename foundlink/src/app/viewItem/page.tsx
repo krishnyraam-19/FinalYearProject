@@ -1,5 +1,9 @@
+import MyItem from "@/components/myItem"
+
 export default function viewItemPage(){
     return(
-        <div>viewItem</div>
+        <div>viewItem
+            <MyItem/>
+        </div>
     )
 }
