@@ -55,9 +55,9 @@ export default function MyItem() {
           <p>{it.title}</p>
           <p className="text-sm">{it.city} • {it.status}</p>
           <img
-  src={`/api/items/${it._id}/image`}
-  alt={it.title}
-  className="w-48 h-48 object-cover rounded"
+          src={`/api/viewMyItem/${it._id.toString()}/image`}
+          alt={it.title}
+          className="w-40 h-40 object-cover rounded"
 />
         </div>
       ))}
