@@ -7,6 +7,9 @@ export default function AddItem() {
   const [title, setTitle] = useState("");
   const [city, setCity] = useState("");
 
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -21,10 +24,17 @@ export default function AddItem() {
 
     console.log({ category, title, city, type, image, description });
 
-    await fetch("/api/addItem", {
-    method: "POST",
-    body: formData, // NOT JSON
+    const res = await fetch("/api/addItem", {
+      method: "POST",
+      body: formData, // NOT JSON
     });
+
+    const data = await res.json();
+    if (!res.ok) {
+      setError(data.message);
+      return;
+    }
+    setSuccess("Item created sccessfully");
   };
 
   const categories = [
@@ -177,6 +187,7 @@ export default function AddItem() {
         >
           Add Item
         </button>
+        <p>{success}</p>
       </form>
     </>
   );

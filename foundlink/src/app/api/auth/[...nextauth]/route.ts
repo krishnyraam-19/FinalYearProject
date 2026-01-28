@@ -6,9 +6,9 @@ import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/user";
 import { redirect } from "next/navigation";
 
-export const handler = NextAuth({
-      secret: process.env.NEXTAUTH_SECRET,
-  session: { strategy: "jwt" },
+export const authOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
+  session: { strategy: "jwt" as const},
 
   providers: [
     Credentials({
@@ -31,9 +31,9 @@ export const handler = NextAuth({
         const ok = await bcrypt.compare(password, user.password);
         // const ok = password === user.password;
 
-        console.log("password",password);
-        console.log("userPass",user.password);
-        console.log("ok",ok);
+        console.log("password", password);
+        console.log("userPass", user.password);
+        console.log("ok", ok);
         if (!ok) return null;
 
         // return minimal safe fields
@@ -47,19 +47,21 @@ export const handler = NextAuth({
   ],
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }:any) {
       // first login only
-      if (user) token.id = (user as any).id;
+      // console.log(user.id);
+      if (user?.id) token.id = String((user as any).id);
       return token;
-      redirect("/")
+      // redirect("/");
     },
-    async session({ session, token }) {
+    async session({ session, token }:any) {
       // make user id available in client
-      (session.user as any).id = token.id;
+      (session.user as any).id = token.id; // <-- use sub
       return session;
     },
   },
-});
+};
+export const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
 export const runtime = "nodejs"; // b

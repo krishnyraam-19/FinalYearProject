@@ -24,6 +24,7 @@ export const Navbar = () => {
             (
             <>
             <p className="">{session.user?.name}</p>
+            <p className="">{session.user?.id}</p>
             <button onClick={()=>{signOut({ callbackUrl: "/logIn" })}} className="cursor-pointer text-white bg-blue-600 px-4 py-2 rounded-full">Log Out</button>
             </>
             )
