@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function EditItemForm({ item }: { item: any }) {
+
+  console.log("FETCH URL =", `/api/editMyItem/${item._id}`);
   const router = useRouter();
 
   const [title, setTitle] = useState(item.title || "");
@@ -23,7 +25,7 @@ export default function EditItemForm({ item }: { item: any }) {
     fd.append("description", description);
     if (imageFile) fd.append("image", imageFile);
 
-    const res = await fetch(`/api/items/${item._id}`, {
+    const res = await fetch(`/api/editMyItem/${item._id}`, {
       method: "PATCH",
       body: fd,
     });
@@ -87,7 +89,7 @@ export default function EditItemForm({ item }: { item: any }) {
                 name="type"
                 value="lost"
                 checked={type === "lost"}
-                //   onChange={() => setType(t)}
+                  onChange={() => setType("lost")}
                 className="h-4 w-4 accent-blue-600"
               />
               <span className="capitalize text-gray-900">Found</span>
@@ -96,7 +98,7 @@ export default function EditItemForm({ item }: { item: any }) {
                 name="type"
                 value="found"
                   checked={type === "found"}
-                //   onChange={() => setType(t)}
+                  onChange={() => setType("found")}
                 className="h-4 w-4 accent-blue-600"
               />
             </label>
