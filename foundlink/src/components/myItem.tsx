@@ -37,6 +37,11 @@ export default function MyItem() {
   const [items, setItems] = useState<any[]>([]);
   const [error, setError] = useState("");
 
+  const handleEdit = async (id:string) =>{
+    // e.preventDefault();
+    window.location.href= `/editItem/${id}`;
+  }
+
   useEffect(() => {
     fetch("/api/viewMyItem",{ method: "POST" })
       .then(async (r) => {
@@ -52,7 +57,8 @@ export default function MyItem() {
   return (
     <div>
       {items.map((it) => (
-        <Link key={it._id} href={`/editItem/${it._id}`}>
+        <div>
+        {/* <Link key={it._id} href={`/editItem/${it._id}`}> */}
         <div className="border p-3 mb-2">
           <p>{it.title}</p>
           <p className="text-sm">{it.city} • {it.status}</p>
@@ -61,9 +67,11 @@ export default function MyItem() {
           alt={it.title}
           className="w-40 h-40 object-cover rounded"
           />
-          <button>Edit</button>
+          
         </div>
-        </Link>
+        {/* </Link> */}
+        <button onClick={()=>handleEdit(it._id)}>Edit</button>
+        </div>
       ))}
     </div>
   );
