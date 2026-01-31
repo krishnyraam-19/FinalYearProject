@@ -70,7 +70,7 @@ export default function MyItem() {
           
         </div>
         {/* </Link> */}
-        <button onClick={()=>handleEdit(it._id)}>Edit</button>
+        {it.status==="PENDING" ? <button onClick={()=>handleEdit(it._id)}>Edit</button> : (null)}
         </div>
       ))}
     </div>

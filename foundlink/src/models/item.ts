@@ -19,7 +19,7 @@ const itemSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["PENDING", "APPROVED", "REJECTED"],
-      default: "PENDING",
+      default: "APPROVED",
       index: true,
     },
     approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
