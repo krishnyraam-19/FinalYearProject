@@ -14,7 +14,7 @@ export const Navbar = () => {
             <Link href="/" className="hover:text-blue-600">Home</Link>
             <Link href="/addItem" className="hover:text-blue-600">Add Items</Link>
             <Link href="/viewItem" className="hover:text-blue-600">View Items</Link>
-            
+            <Link href="/adminView" className="hover:text-blue-600">Admin View</Link>
             {!session ? (
             <>
             <Link href="/logIn" className="hover:text-blue-600">Log In</Link>
@@ -24,7 +24,7 @@ export const Navbar = () => {
             (
             <>
             <p className="">{session.user?.name}</p>
-            <p className="">{session.user?.id}</p>
+            {/* <p className="">{session.user?.id}</p> */}
             <button onClick={()=>{signOut({ callbackUrl: "/logIn" })}} className="cursor-pointer text-white bg-blue-600 px-4 py-2 rounded-full">Log Out</button>
             </>
             )
