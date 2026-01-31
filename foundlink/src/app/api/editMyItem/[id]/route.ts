@@ -26,13 +26,16 @@ export async function PATCH(
 
     const title = formData.get("title");
     const city = formData.get("city");
-    const status = formData.get("status");
+    const type = formData.get("type");
+    // const status = formData.get("status");
+    const description = formData.get("description");
     const image = formData.get("image"); // File | null
-
+    console.log(type);
     const updateData: any = {
       ...(title && { title }),
       ...(city && { city }),
-      ...(status && { status }),
+      ...(description && { description }),
+      ...(type && { type }),
     };
 
     // If image exists, convert to Buffer
@@ -45,7 +48,7 @@ export async function PATCH(
         contentType: image.type,
       };
     }
-    console.log(id);
+    console.log(updateData);
     const updatedItem = await Item.findByIdAndUpdate(
       id,
       updateData,

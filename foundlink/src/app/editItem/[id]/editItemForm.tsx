@@ -14,6 +14,7 @@ export default function EditItemForm({ item }: { item: any }) {
   const [type, setType] = useState(item.type || "");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [msg, setMsg] = useState("");
+  console.log(type);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,6 +24,7 @@ export default function EditItemForm({ item }: { item: any }) {
     fd.append("title", title);
     fd.append("city", city);
     fd.append("description", description);
+    fd.append("type", type);
     if (imageFile) fd.append("image", imageFile);
 
     const res = await fetch(`/api/editMyItem/${item._id}`, {
