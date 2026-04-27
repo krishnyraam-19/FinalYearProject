@@ -1,4 +1,4 @@
-import SignInForm from "@/components/signIn";
+import SignInForm from "@/components/logIn";
 import Link from "next/link";
 
 
