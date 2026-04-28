@@ -6,67 +6,172 @@ import { register } from "module";
 import { useState } from "react";
 import { useFormState } from "react-dom";
 
-export default function SignUpForm(){
-    
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
+export default function SignUpForm() {
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-    const handleSubmit  = async(e:any)=>{
-        e.preventDefault();
-        const fname = e.target[0].value;
-        const lname = e.target[1].value;
-        const email = e.target[2].value;
-        const phone = e.target[3].value;
-        const password = e.target[4].value;
-        console.log(email,password);
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    // const fname = e.target[0].value;
+    // const lname = e.target[1].value;
+    // const email = e.target[2].value;
+    // const phone = e.target[3].value;
+    // const password = e.target[4].value;
+    // const role = e.target[5].value;
 
-        const res = await fetch("/api/signUp",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json",
-            },
-            body:JSON.stringify({
-                fname,
-                lname,
-                email,
-                phone,
-                password
-            })
-        })
-        const data =await res.json();
-        if(!res.ok){
-            setError(data.message);
-            return;
-        }
-        setSuccess("User created sccessfully")
+    const formData = new FormData(e.target);
+
+    const fname = formData.get("fname");
+    const lname = formData.get("lname");
+    const email = formData.get("email");
+    const phone = formData.get("phone");
+    const password = formData.get("password");
+    const role = formData.get("role");
+    console.log(email, password, role);
+
+    const res = await fetch("/api/signUp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fname,
+        lname,
+        email,
+        phone,
+        password,
+        role,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      setError(data.message);
+      return;
     }
-    
+    setSuccess("User created sccessfully");
+  };
 
-    return(
-        <form className="space-x-4" onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="fname" className="block text-la font-medium text-gray-700">First Name:</label>
-                <input className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700" type="text" name="fname" id="fname" placeholder="Enter your First Name" required/>
-            </div>
-            <div>
-                <label htmlFor="lname" className="block text-la font-medium text-gray-700">Last Name:</label>
-                <input className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700" type="text" name="lname" id="lname" placeholder="Enter your Last Name"/>
-            </div>
-            <div>
-                <label htmlFor="email" className="block text-la font-medium text-gray-700">Email:</label>
-                <input className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700" type="email" name="email" id="email" placeholder="Enter your email" required/>
-            </div>
-            <div>
-                <label htmlFor="phone" className="block text-la font-medium text-gray-700">Phone Number:</label>
-                <input className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700" type="phone" name="phone" id="phone" placeholder="Enter your Phone Number" required/>
-            </div>
-            <div>
-                <label htmlFor="password" className="mt-2 block text-la font-medium text-gray-700">Password:</label>
-                <input className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700" type="password" name="password" id="password" placeholder="Enter your password"/>
-            </div>
-            <button type="submit" className="mt-5 w-full rounded-lg bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">Sign Up</button>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            {success && <p style={{ color: "green" }}>{success}</p>}
-        </form>
-    )
+  return (
+    <form className="space-x-4" onSubmit={handleSubmit}>
+      <div>
+        <label
+          htmlFor="fname"
+          className="block text-la font-medium text-gray-700"
+        >
+          First Name:
+        </label>
+        <input
+          className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700"
+          type="text"
+          name="fname"
+          id="fname"
+          placeholder="Enter your First Name"
+          required
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="lname"
+          className="block text-la font-medium text-gray-700"
+        >
+          Last Name:
+        </label>
+        <input
+          className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700"
+          type="text"
+          name="lname"
+          id="lname"
+          placeholder="Enter your Last Name"
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="email"
+          className="block text-la font-medium text-gray-700"
+        >
+          Email:
+        </label>
+        <input
+          className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700"
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Enter your email"
+          required
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="phone"
+          className="block text-la font-medium text-gray-700"
+        >
+          Phone Number:
+        </label>
+        <input
+          className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700"
+          type="phone"
+          name="phone"
+          id="phone"
+          placeholder="Enter your Phone Number"
+          required
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="password"
+          className="mt-2 block text-la font-medium text-gray-700"
+        >
+          Password:
+        </label>
+        <input
+          className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700"
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Enter your password"
+        />
+      </div>
+      <div>
+        <label className="mt-2 block text-la font-medium text-gray-700">
+          Select Role:
+        </label>
+
+        <div className="mt-5 flex items-center gap-6">
+          <div className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="role"
+              id="user"
+              value="user"
+              className="h-4 w-4 text-blue-700 border-gray-300"
+            />
+            <label htmlFor="user" className="font-medium text-gray-700">
+              User
+            </label>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="role"
+              id="volunteer"
+              value="volunteer"
+              className="h-4 w-4 text-blue-700 border-gray-300"
+            />
+            <label htmlFor="volunteer" className="font-medium text-gray-700">
+              Volunteer
+            </label>
+          </div>
+        </div>
+      </div>
+      <button
+        type="submit"
+        className="mt-5 w-full rounded-lg bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
+      >
+        Sign Up
+      </button>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {success && <p style={{ color: "green" }}>{success}</p>}
+    </form>
+  );
 }

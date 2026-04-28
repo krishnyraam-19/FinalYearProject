@@ -8,13 +8,14 @@ export const Navbar = () => {
     return( 
     <nav className="sticky top-0 z-50 bg-white shadow">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
-            <Link href="/" className="hover:text-blue-600">My E Commerce</Link>
+            <Link href="/" className="hover:text-blue-600">Found Link LK</Link>
         
             <div className="hidden md:flex space-x-6">
             <Link href="/" className="hover:text-blue-600">Home</Link>
-            <Link href="/addItem" className="hover:text-blue-600">Add Items</Link>
-            <Link href="/viewItem" className="hover:text-blue-600">View Items</Link>
-            <Link href="/adminView" className="hover:text-blue-600">Admin View</Link>
+            <Link href="/addItem" className="hover:text-blue-600">Add Lost Items</Link>
+            <p>{session?.user?.role}</p>
+            <Link href="/viewItem" className="hover:text-blue-600">Add Found Items</Link>
+            <Link href="/adminView" className="hover:text-blue-600">View Items</Link>
             {!session ? (
             <>
             <Link href="/logIn" className="hover:text-blue-600">Log In</Link>

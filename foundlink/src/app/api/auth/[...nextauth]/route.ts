@@ -41,6 +41,7 @@ export const authOptions = {
           id: user._id.toString(),
           name: user.fname,
           email: user.email,
+          role:user.role.toString()
         };
       },
     }),
@@ -50,13 +51,17 @@ export const authOptions = {
     async jwt({ token, user }:any) {
       // first login only
       // console.log(user.id);
-      if (user?.id) token.id = String((user as any).id);
+      if (user?.id){
+        token.id = String((user as any).id);
+        token.role=String((user as any).role);
+      }
       return token;
       // redirect("/");
     },
     async session({ session, token }:any) {
       // make user id available in client
       (session.user as any).id = token.id; // <-- use sub
+      (session.user as any).role = token.role;
       return session;
     },
   },

@@ -7,9 +7,11 @@ import Item from "@/models/item";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  return NextResponse.json({ ok: true, id: params.id });
+  const { id } = await context.params;
+
+  return NextResponse.json({ ok: true, id });
 }
 
 export async function PATCH(

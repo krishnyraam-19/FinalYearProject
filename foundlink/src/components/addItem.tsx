@@ -10,7 +10,7 @@ export default function AddItem() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
