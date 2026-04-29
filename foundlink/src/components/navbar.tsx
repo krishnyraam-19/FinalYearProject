@@ -38,9 +38,15 @@ export const Navbar = () => {
 
           {/* Admin only */}
           {session?.user?.role === "admin" && (
+            <>
             <Link href="/adminView" className="hover:text-blue-600">
               View Items
             </Link>
+            <Link href="/approvePosts" className="hover:text-blue-600">
+              Approve Posts
+            </Link>
+            </>
+            
           )}
 
           {!session ? (
