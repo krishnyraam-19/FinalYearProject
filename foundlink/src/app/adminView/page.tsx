@@ -10,7 +10,6 @@ export default function adminPage (){
     return(
         <>
         <AdminView/>
-        <ItemApproval/>
         </>
     )
 }

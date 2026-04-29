@@ -6,7 +6,7 @@ export default function ItemApproval() {
   const [error, setError] = useState("");
 
   const handleApprove = async (id: string) => {
-    const res = await fetch(`/api/approveItem/${id}`, {
+    const res = await fetch(`/api/adminPendingApproval/${id}`, {
       method: "PATCH",
     });
 
