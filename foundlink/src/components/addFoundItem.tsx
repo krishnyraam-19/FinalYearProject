@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function AddItem() {
+export default function AddFoundItem() {
   const [category, setCategory] = useState("");
   const [title, setTitle] = useState("");
   const [city, setCity] = useState("");
@@ -14,12 +14,12 @@ export default function AddItem() {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-    formData.append("type", "lost");
+    formData.append("type", "found");
 
     // const category = formData.get("category");
     // const title = formData.get("title");
     // const city = formData.get("city");
-    // const type = formData.get("type");
+    // const type = "lost";
     // const description = formData.get("description");
     // const image = formData.get("image"); // File
 
@@ -96,7 +96,10 @@ export default function AddItem() {
           />
         </div>
 
+      
        
+
+        
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Description

@@ -16,6 +16,10 @@ export async function POST() {
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await connectToDatabase();
-  const products = await Product.find({ createdBy: session.user.id }).sort({ createdAt: -1 });
+  var type;
+  if(session.user.role=="volunteer"){
+    type="found";
+  }else type="lost";
+  const products = await Product.find({ createdBy: session.user.id, type:type}).sort({ createdAt: -1 });
   return NextResponse.json(products);
 }
