@@ -13,6 +13,57 @@ export async function GET() {
     const approvedPosts = await Item.countDocuments({ status: "APPROVED" });
     const rejectedPosts = await Item.countDocuments({ status: "REJECTED" });
 
+    const monthlyResult = await Item.aggregate([
+      {
+        $group: {
+          _id: {
+            month: { $month: "$createdAt" },
+            type: "$type",
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          "_id.month": 1,
+        },
+      },
+    ]);
+
+    const monthNames = [
+      "",
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    const monthlyData = monthNames.slice(1).map((month, index) => {
+      const monthNumber = index + 1;
+
+      const lostData = monthlyResult.find(
+        (item) => item._id.month === monthNumber && item._id.type === "lost"
+      );
+
+      const foundData = monthlyResult.find(
+        (item) => item._id.month === monthNumber && item._id.type === "found"
+      );
+
+      return {
+        month,
+        lost: lostData ? lostData.count : 0,
+        found: foundData ? foundData.count : 0,
+      };
+    });
+
     const data = {
       cards: {
         totalLost,  
@@ -25,7 +76,11 @@ export async function GET() {
         { name: "Approved", value: approvedPosts },
         { name: "Rejected", value: rejectedPosts },
       ],
+        monthlyData,
+
     };
+
+    
 
     return NextResponse.json(data);
   } catch (error) {

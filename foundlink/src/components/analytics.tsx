@@ -13,13 +13,13 @@ import {
   Cell,
 } from "recharts";
 
-const monthlyData = [
-  { month: "Jan", lost: 12, found: 8 },
-  { month: "Feb", lost: 18, found: 10 },
-  { month: "Mar", lost: 9, found: 15 },
-  { month: "Apr", lost: 22, found: 14 },
-  { month: "May", lost: 16, found: 20 },
-];
+// const monthlyData = [
+//   { month: "Jan", lost: 12, found: 8 },
+//   { month: "Feb", lost: 18, found: 10 },
+//   { month: "Mar", lost: 9, found: 15 },
+//   { month: "Apr", lost: 22, found: 14 },
+//   { month: "May", lost: 16, found: 20 },
+// ];
 
 const statusData = [
   { name: "Pending", value: 25 },
@@ -84,7 +84,7 @@ export default function DashboardPage() {
           </h2>
 
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={monthlyData}>
+            <BarChart data={dashboardData.monthlyData}>
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
@@ -103,7 +103,7 @@ export default function DashboardPage() {
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
-                data={statusData}
+                data={dashboardData.statusData}
                 dataKey="value"
                 nameKey="name"
                 outerRadius={100}
