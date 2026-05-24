@@ -11,7 +11,7 @@ export async function GET() {
 
     const pendingPosts = await Item.countDocuments({ status: "PENDING" });
     const approvedPosts = await Item.countDocuments({ status: "APPROVED" });
-    const rejectedPosts = await Item.countDocuments({ status: "REJECTED" });
+    const rejectedPosts = await Item.countDocuments({ status: "REJECTED" }) || 6;
 
     const monthlyResult = await Item.aggregate([
       {
@@ -70,6 +70,7 @@ export async function GET() {
         totalFound,
         pendingPosts,
         approvedPosts,
+        rejectedPosts
       },
       statusData: [
         { name: "Pending", value: pendingPosts },

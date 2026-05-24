@@ -45,6 +45,9 @@ export const Navbar = () => {
             <Link href="/approvePosts" className="hover:text-blue-600">
               Approve Posts
             </Link>
+            <Link href="/adminAnalytics" className="hover:text-blue-600">
+              Analytical Summary
+            </Link>
             </>
             
           )}

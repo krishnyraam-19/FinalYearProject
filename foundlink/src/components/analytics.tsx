@@ -1,5 +1,5 @@
 "use client";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import {
   BarChart,
@@ -11,6 +11,8 @@ import {
   PieChart,
   Pie,
   Cell,
+  LabelList,
+  Legend,
 } from "recharts";
 
 // const monthlyData = [
@@ -28,7 +30,6 @@ const statusData = [
 ];
 
 export default function DashboardPage() {
-
   const [dashboardData, setDashboardData] = useState(null);
 
   useEffect(() => {
@@ -51,43 +52,52 @@ export default function DashboardPage() {
       <h1 className="text-3xl font-bold mb-6">Analytics Dashboard</h1>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-5 mb-8">
+        <DashboardCard
+          title="Total Lost Items"
+          value={dashboardData.cards.totalLost}
+        />
 
-  <DashboardCard
-    title="Total Lost Items"
-    value={dashboardData.cards.totalLost}
-  />
+        <DashboardCard
+          title="Total Found Items"
+          value={dashboardData.cards.totalFound}
+        />
 
-  <DashboardCard
-    title="Total Found Items"
-    value={dashboardData.cards.totalFound}
-  />
+        <DashboardCard
+          title="Pending Posts"
+          value={dashboardData.cards.pendingPosts}
+        />
 
-  <DashboardCard
-    title="Pending Posts"
-    value={dashboardData.cards.pendingPosts}
-  />
-
-  <DashboardCard
-    title="Approved Posts"
-    value={dashboardData.cards.approvedPosts}
-  />
-
-</div>
+        <DashboardCard
+          title="Approved Posts"
+          value={dashboardData.cards.approvedPosts}
+        />
+        <DashboardCard
+          title="Rejected Posts"
+          value={dashboardData.cards.rejectedPosts}
+        />
+      </div>
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Bar Chart */}
         <div className="bg-white p-5 rounded-xl shadow">
-          <h2 className="text-xl font-semibold mb-4">
-            Lost vs Found Items
-          </h2>
+          <h2 className="text-xl font-semibold mb-4">Lost vs Found Items</h2>
 
           <ResponsiveContainer width="100%" height={300}>
+            <Bar dataKey="lost" fill="#ef4444">
+              <LabelList dataKey="lost" position="top" />
+            </Bar>
+
+            <Bar dataKey="found" fill="#22c55e">
+              <LabelList dataKey="found" position="top" />
+            </Bar>
+
             <BarChart data={dashboardData.monthlyData}>
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
+              <Legend />
               <Bar dataKey="lost" fill="#ef4444" />
               <Bar dataKey="found" fill="#22c55e" />
             </BarChart>
@@ -96,9 +106,7 @@ export default function DashboardPage() {
 
         {/* Pie Chart */}
         <div className="bg-white p-5 rounded-xl shadow">
-          <h2 className="text-xl font-semibold mb-4">
-            Post Status Summary
-          </h2>
+          <h2 className="text-xl font-semibold mb-4">Post Status Summary</h2>
 
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
