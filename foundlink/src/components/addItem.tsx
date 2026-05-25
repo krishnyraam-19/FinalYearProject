@@ -16,14 +16,6 @@ export default function AddItem() {
     const formData = new FormData(e.currentTarget);
     formData.append("type", "lost");
 
-    // const category = formData.get("category");
-    // const title = formData.get("title");
-    // const city = formData.get("city");
-    // const type = formData.get("type");
-    // const description = formData.get("description");
-    // const image = formData.get("image"); // File
-
-    // console.log({ category, title, city, type, image, description });
 
     const res = await fetch("/api/addItem", {
       method: "POST",
@@ -96,7 +88,6 @@ export default function AddItem() {
           />
         </div>
 
-       
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Description

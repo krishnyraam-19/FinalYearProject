@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const contactRequestSchema = new mongoose.Schema({
   item: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Item",
+    ref: "CntRequest",
     required: true
   },
 

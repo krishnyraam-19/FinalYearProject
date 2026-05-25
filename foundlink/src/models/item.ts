@@ -22,6 +22,12 @@ const itemSchema = new mongoose.Schema(
       default: "PENDING",
       index: true,
     },
+
+    resolveStatus: {
+      type: String,
+      default: "DUE"
+    },
+
     approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
     approvedAt: { type: Date, default: null },
   },

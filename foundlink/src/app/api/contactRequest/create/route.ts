@@ -51,6 +51,13 @@ export async function POST(req: NextRequest) {
       lostOwner: item.createdBy,
     });
 
+    await Item.findByIdAndUpdate(
+      body.itemId,
+      {
+        resolveStatus: "CONTACTREQUESTED",
+      }
+    );
+
     return NextResponse.json({
       success: true,
       request: newRequest,

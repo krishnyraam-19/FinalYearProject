@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import MyContactRequests from "./requestedItems";
 
 export default function AdminView() {
 
@@ -18,46 +19,36 @@ export default function AdminView() {
   };
 
   const handleContactRequest = async (itemId: string) => {
+  try {
+    const response = await fetch("/api/contactRequest/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ itemId }),
+    });
 
-    try {
+    const data = await response.json();
 
-      const response = await fetch(
-        "/api/contactRequest/create",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            itemId,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-
-      alert("Contact request sent successfully");
-
-    } catch (error: any) {
-      alert(error.message);
+    if (!response.ok) {
+      throw new Error(data.message);
     }
-  };
 
-  useEffect(() => {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item._id === itemId
+          ? { ...item, resolveStatus: "CONTACTREQUESTED" }
+          : item
+      )
+    );
 
-    fetch("/api/adminView", { method: "POST" })
-      .then(async (r) => {
-        if (!r.ok) throw new Error("Unauthorized or failed");
-        return r.json();
-      })
-      .then(setItems)
-      .catch((e) => setError(e.message));
+    alert("Contact request sent successfully");
+  } catch (error: any) {
+    alert(error.message);
+  }
+};
 
-  }, []);
+useEffect(() => { fetch("/api/adminView", { method: "POST" }) .then(async (r) => { if (!r.ok) throw new Error("Unauthorized or failed"); return r.json(); }) .then(setItems) .catch((e) => setError(e.message)); }, []);
 
   if (error) return <p>{error}</p>;
 
@@ -74,6 +65,10 @@ export default function AdminView() {
 
             <p className="text-sm">
               {it.city} • {it.status}
+            </p>
+
+            <p className="text-sm">
+              {it.resolveStatus}
             </p>
 
             <img
@@ -95,7 +90,7 @@ export default function AdminView() {
           )}
 
           {/* VOLUNTEER BUTTON */}
-          {role === "volunteer" && it.status === "APPROVED" && (
+          {role === "volunteer" && it.resolveStatus === "DUE" && (
             <button
               onClick={() => handleContactRequest(it._id)}
               className="bg-blue-500 text-white px-3 py-1 rounded"
@@ -107,6 +102,9 @@ export default function AdminView() {
         </div>
 
       ))}
+      <div>
+        <MyContactRequests/>
+      </div>
 
     </div>
   );
