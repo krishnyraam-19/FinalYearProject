@@ -23,6 +23,9 @@ export const Navbar = () => {
             <Link href="/adminView" className="hover:text-blue-600">
                 View All Item
             </Link>
+            <Link href="/viewResolvedItem" className="hover:text-blue-600">
+                View Resolved Items
+            </Link>
             </>
             
           )}

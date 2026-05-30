@@ -21,7 +21,11 @@ export async function POST() {
   if(session.user.role=="volunteer"){
     type="found";
   }else type="lost";
-  const products = await Product.find({ createdBy: session.user.id, type:type}).sort({ createdAt: -1 });
+  const products = await Product.find({
+  createdBy: session.user.id,
+  type: type,
+  resolveStatus:  {$in: ["DUE","CONTACTREQUESTED","RESOLVED"]}
+}).sort({ createdAt: -1 });
   const updatedProducts = await Promise.all(
 
     products.map(async (product) => {
