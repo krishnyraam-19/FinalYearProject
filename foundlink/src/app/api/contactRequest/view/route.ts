@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
-import CntRequest from "@/models/contactRequest";
+import ContactRequest from "@/models/contactRequest";
+import "@/models/item";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
@@ -23,7 +24,7 @@ export async function GET() {
       filter = {
         status: { $in: ["PENDING", "APPROVED"] },
       };
-    } else if (session.user.role === "volunteer") {
+    } else if (session.user.role === "volunteer" && session.user.role === "user" ) {
       filter = {
         requestedBy: session.user.id,
         status: "PENDING",
@@ -35,7 +36,7 @@ export async function GET() {
       );
     }
 
-    const requests = await CntRequest.find(filter)
+    const requests = await ContactRequest.find(filter)
       .populate("item", "title city status")
       .populate("requestedBy", "fname lname email phone role")
       .populate("lostOwner", "fname lname email phone")
