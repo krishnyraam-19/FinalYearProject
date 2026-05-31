@@ -12,10 +12,7 @@ export async function GET() {
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { message: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     let filter = {};
@@ -24,16 +21,17 @@ export async function GET() {
       filter = {
         status: { $in: ["PENDING", "APPROVED"] },
       };
-    } else if (session.user.role === "volunteer" && session.user.role === "user" ) {
+    } else if (session.user.role === "volunteer") {
       filter = {
         requestedBy: session.user.id,
         status: "PENDING",
       };
+    } else if (session.user.role === "user") {
+      filter = {
+        lostOwner: session.user.id,
+      };
     } else {
-      return NextResponse.json(
-        { message: "Access denied" },
-        { status: 403 }
-      );
+      return NextResponse.json({ message: "Access denied" }, { status: 403 });
     }
 
     const requests = await ContactRequest.find(filter)
@@ -51,9 +49,6 @@ export async function GET() {
     const message =
       error instanceof Error ? error.message : "Something went wrong";
 
-    return NextResponse.json(
-      { message },
-      { status: 500 }
-    );
+    return NextResponse.json({ message }, { status: 500 });
   }
 }
