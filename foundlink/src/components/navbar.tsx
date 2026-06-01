@@ -45,6 +45,9 @@ export const Navbar = () => {
             <Link href="/adminView" className="hover:text-blue-600">
                 View All Item
             </Link>
+            <Link href="/viewRating" className="hover:text-blue-600">
+                View Ratings
+            </Link>
             </>
           )}
 
