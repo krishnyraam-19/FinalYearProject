@@ -6,12 +6,12 @@ export const Navbar = () => {
     const {data:session} = useSession();
 
     return( 
-    <nav className="sticky top-0 z-50 bg-white shadow">
+    <nav className="sticky top-0 z-50 bg-blue shadow">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
             <Link href="/" className="hover:text-blue-600">Found Link LK</Link>
         
             <div className="hidden md:flex space-x-6">
-            <Link href="/" className="hover:text-blue-600">Home</Link>
+            <Link href="/" className="hover:text-green-600">Home</Link>
             {session?.user?.role === "user" && (
                 <>
             <Link href="/addItem" className="hover:text-blue-600">
@@ -19,7 +19,7 @@ export const Navbar = () => {
             </Link>
             <Link href="/viewItem" className="hover:text-blue-600">
                 View my Item
-            </Link>
+            </Link> 
             <Link href="/adminView" className="hover:text-blue-600">
                 View All Item
             </Link>
@@ -71,8 +71,8 @@ export const Navbar = () => {
           )}
 
           {!session ? (
-            <Link href="/logIn" className="hover:text-blue-600">
-              Log In
+            <Link href="/logIn" className="hover:text-green-600">
+              Log In here
             </Link>
           ) : (
             <>

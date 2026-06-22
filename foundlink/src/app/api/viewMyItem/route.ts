@@ -5,7 +5,7 @@ import Product from "@/models/item";
 import { getServerSession } from "next-auth";
 import ContactRequest from "@/models/contactRequest";
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 
 
 

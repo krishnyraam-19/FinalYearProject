@@ -3,7 +3,7 @@ import dbConnect from "@/lib/mongodb";
 import ContactRequest from "@/models/contactRequest";
 import "@/models/item";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 
 export async function GET() {
   try {
@@ -24,7 +24,7 @@ export async function GET() {
     } else if (session.user.role === "volunteer") {
       filter = {
         requestedBy: session.user.id,
-        status: "PENDING",
+        status: { $in: ["PENDING", "APPROVED"] },
       };
     } else if (session.user.role === "user") {
       filter = {

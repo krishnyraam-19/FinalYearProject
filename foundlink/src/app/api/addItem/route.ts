@@ -2,7 +2,7 @@ import connectToDatabase from "@/lib/mongodb";
 import item from "@/models/item";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { authOptions, handler } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 
 
 

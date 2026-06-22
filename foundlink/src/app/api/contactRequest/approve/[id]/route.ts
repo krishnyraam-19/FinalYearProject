@@ -3,7 +3,7 @@ import dbConnect from "@/lib/mongodb";
 import ContactRequest from "@/models/contactRequest";
 import Item from "@/models/item";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 
 export async function PUT(
   req: NextRequest,

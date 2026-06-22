@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import MyContactRequests from "./requestedItems";
 import { useRouter } from "next/navigation";
+import MyContactRequests from "./requestedItems";
 
 export default function AdminView() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   const [items, setItems] = useState<any[]>([]);
   const [error, setError] = useState("");
@@ -16,22 +17,54 @@ export default function AdminView() {
   const [selectedCities, setSelectedCities] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
-  const role = session?.user?.role;
+  const role = (session?.user as any)?.role;
 
   const uniqueCities = [...new Set(items.map((i) => i.city).filter(Boolean))];
   const uniqueCategories = [
     ...new Set(items.map((i) => i.category).filter(Boolean)),
   ];
 
-  const router = useRouter();
-  const handleEdit = async (id: string) => {
+  const fetchItems = async (searchText = "") => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await fetch("/api/adminView", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ search: searchText }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Unauthorized or failed");
+      }
+
+      setItems(data);
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchItems("");
+    }
+  }, [status]);
+
+  const handleEdit = (id: string) => {
     router.push(`/editItem/${id}`);
   };
 
   const handleCheckboxChange = (
     value: string,
     selected: string[],
-    setSelected: React.Dispatch<React.SetStateAction<string[]>>,
+    setSelected: React.Dispatch<React.SetStateAction<string[]>>
   ) => {
     if (selected.includes(value)) {
       setSelected(selected.filter((v) => v !== value));
@@ -50,34 +83,6 @@ export default function AdminView() {
 
     return cityMatch && categoryMatch;
   });
-
-  const fetchItems = async (searchText = "") => {
-    try {
-      setLoading(true);
-      setError("");
-
-      const response = await fetch("/api/adminView", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          search: searchText,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Unauthorized or failed");
-      }
-
-      const data = await response.json();
-      setItems(data);
-    } catch (e: any) {
-      setError(e.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSearch = () => {
     fetchItems(search);
@@ -103,15 +108,15 @@ export default function AdminView() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message);
+        throw new Error(data.message || "Failed to send request");
       }
 
       setItems((prevItems) =>
         prevItems.map((item) =>
           item._id === itemId
             ? { ...item, resolveStatus: "CONTACTREQUESTED" }
-            : item,
-        ),
+            : item
+        )
       );
 
       alert("Contact request sent successfully");
@@ -120,46 +125,47 @@ export default function AdminView() {
     }
   };
 
-  useEffect(() => {
-    fetchItems("");
-  }, []);
+  if (status === "loading") return <p>Loading session...</p>;
+
+  if (status === "unauthenticated") {
+    return <p>Please login first.</p>;
+  }
 
   if (error) return <p>{error}</p>;
 
   return (
     <div className="flex gap-6">
-      {/* LEFT SIDE FILTER PANEL */}
-      <div className="w-72 border rounded p-4 h-fit sticky top-4">
-        <h2 className="font-bold text-lg mb-4">Search & Filters</h2>
+      <div className="sticky top-24 h-fit w-72 rounded border border-white/10 p-4">
+        <h2 className="mb-4 text-lg font-bold">Search & Filters</h2>
 
         <input
           type="text"
           placeholder="Search..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border px-3 py-2 rounded w-full mb-3"
+          className="mb-3 w-full rounded border px-3 py-2 text-slate-900"
         />
 
-        <div className="flex gap-2 mb-6">
+        <div className="mb-6 flex gap-2">
           <button
             onClick={handleSearch}
-            className="bg-blue-600 text-white px-3 py-2 rounded w-full"
+            className="w-full rounded bg-blue-600 px-3 py-2 text-white"
           >
             Search
           </button>
 
           <button
             onClick={handleClear}
-            className="bg-gray-500 text-white px-3 py-2 rounded w-full"
+            className="w-full rounded bg-gray-500 px-3 py-2 text-white"
           >
             Clear
           </button>
         </div>
 
         <div className="mb-6">
-          <p className="font-semibold mb-2">City</p>
+          <p className="mb-2 font-semibold">City</p>
 
-          <div className="flex flex-col gap-2 max-h-40 overflow-y-auto">
+          <div className="flex max-h-40 flex-col gap-2 overflow-y-auto">
             {uniqueCities.map((city) => (
               <label key={city} className="flex items-center gap-2 text-sm">
                 <input
@@ -169,7 +175,7 @@ export default function AdminView() {
                     handleCheckboxChange(
                       city,
                       selectedCities,
-                      setSelectedCities,
+                      setSelectedCities
                     )
                   }
                 />
@@ -180,11 +186,14 @@ export default function AdminView() {
         </div>
 
         <div>
-          <p className="font-semibold mb-2">Category</p>
+          <p className="mb-2 font-semibold">Category</p>
 
-          <div className="flex flex-col gap-2 max-h-40 overflow-y-auto">
+          <div className="flex max-h-40 flex-col gap-2 overflow-y-auto">
             {uniqueCategories.map((category) => (
-              <label key={category} className="flex items-center gap-2 text-sm">
+              <label
+                key={category}
+                className="flex items-center gap-2 text-sm"
+              >
                 <input
                   type="checkbox"
                   checked={selectedCategories.includes(category)}
@@ -192,7 +201,7 @@ export default function AdminView() {
                     handleCheckboxChange(
                       category,
                       selectedCategories,
-                      setSelectedCategories,
+                      setSelectedCategories
                     )
                   }
                 />
@@ -203,19 +212,18 @@ export default function AdminView() {
         </div>
       </div>
 
-      {/* RIGHT SIDE ITEMS */}
       <div className="flex-1">
         {loading && <p>Loading...</p>}
 
         {!loading && filteredItems.length === 0 && <p>No items found.</p>}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredItems.map((it) => (
-            <div key={it._id} className="border rounded p-4">
+            <div key={it._id} className="rounded border border-white/10 p-4">
               <img
                 src={`/api/viewMyItem/${it._id.toString()}/image`}
                 alt={it.title}
-                className="w-full h-52 object-contain rounded mb-3 bg-gray-100"
+                className="mb-3 h-52 w-full rounded bg-gray-100 object-contain"
               />
 
               <p className="font-bold">{it.title}</p>
@@ -224,12 +232,12 @@ export default function AdminView() {
                 {it.city} • {it.status}
               </p>
 
-              <p className="text-sm mb-3">{it.resolveStatus}</p>
+              <p className="mb-3 text-sm">{it.resolveStatus}</p>
 
               {role === "admin" && it.status === "PENDING" && (
                 <button
                   onClick={() => handleEdit(it._id)}
-                  className="bg-green-500 text-white px-3 py-1 rounded mr-2"
+                  className="mr-2 rounded bg-green-500 px-3 py-1 text-white"
                 >
                   Edit
                 </button>
@@ -238,17 +246,13 @@ export default function AdminView() {
               {role === "volunteer" && it.resolveStatus === "DUE" && (
                 <button
                   onClick={() => handleContactRequest(it._id)}
-                  className="bg-blue-500 text-white px-3 py-1 rounded"
+                  className="rounded bg-blue-500 px-3 py-1 text-white"
                 >
                   Send Contact Request
                 </button>
               )}
             </div>
           ))}
-        </div>
-
-        <div className="mt-6">
-          <MyContactRequests />
         </div>
       </div>
     </div>

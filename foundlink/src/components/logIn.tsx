@@ -1,43 +1,97 @@
-"use client"
+"use client";
+
 import { signIn } from "next-auth/react";
-
 import { useState } from "react";
-import { redirect } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
+export default function SignInForm() {
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-export default function SignInForm(){
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    const[error, setError] = useState("");
-    const handleSubmit = async(e:any)=>{
-        e.preventDefault();
-        const email = e.target[0].value;
-        const password = e.target[1].value;
+    const formData = new FormData(e.currentTarget);
 
-        const res = await signIn("credentials",{
-            redirect:false,
-            email,
-            password
-        })
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
-        if(res?.error){
-            setError("error");
-            
-        }
-        if(res?.url) redirect("/")
+    const res = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+      callbackUrl: "/",
+    });
 
-        }
-    return(
-        
-        <form className="space-x-4" onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="email" className="block text-la font-medium text-gray-700">Email:</label>
-                <input className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700" type="email" name="email" id="email" placeholder="Enter your email"/>
-            </div>
-            <div>
-                <label htmlFor="password" className="mt-2 block text-la font-medium text-gray-700">Password:</label>
-                <input className="mt-5 block w-full rounded-md border-gray-300 shadow-sm font-medium text-blue-700" type="password" name="password" id="password" placeholder="Enter your password"/>
-            </div>
-            <button type="submit" className="mt-5 w-full rounded-lg bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">SignIn</button>
-        </form>
-    )
+    if (res?.error) {
+      setError("Invalid email or password");
+      return;
+    }
+
+    router.push("/");
+    router.refresh();
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <div>
+        <label
+          htmlFor="email"
+          className="mb-2 block text-sm font-bold text-slate-700"
+        >
+          Email Address
+        </label>
+
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter your email"
+          className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200"
+          required
+        />
+      </div>
+
+      <div>
+        <label
+          htmlFor="password"
+          className="mb-2 block text-sm font-bold text-slate-700"
+        >
+          Password
+        </label>
+
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your password"
+          className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200"
+          required
+        />
+      </div>
+
+      {error && (
+        <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+          {error}
+        </div>
+      )}
+
+      <button
+        type="submit"
+        className="w-full rounded-xl bg-emerald-400 py-3 font-black text-slate-950 transition hover:bg-emerald-300"
+      >
+        Sign In
+      </button>
+
+      <p className="text-center text-sm text-slate-500">
+        Don&apos;t have an account?{" "}
+        <a
+          href="/signUp"
+          className="font-bold text-emerald-500 hover:text-emerald-400"
+        >
+          Sign Up
+        </a>
+      </p>
+    </form>
+  );
 }

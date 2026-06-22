@@ -21,7 +21,7 @@ export default function ItemApproval() {
   };
 
   useEffect(() => {
-    fetch("/api/adminPendingItemView", { method: "POST" })
+    fetch("/api/adminPendingItemView", { method: "GET" })
       .then(async (r) => {
         if (!r.ok) throw new Error("Unauthorized");
         return r.json();
