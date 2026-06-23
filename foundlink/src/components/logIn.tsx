@@ -80,11 +80,11 @@ export default function SignInForm() {
         type="submit"
         className="w-full rounded-xl bg-emerald-400 py-3 font-black text-slate-950 transition hover:bg-emerald-300"
       >
-        Sign In
+        Log In
       </button>
 
       <p className="text-center text-sm text-slate-500">
-        Don&apos;t have an account?{" "}
+        Don't have an account?{" "}
         <a
           href="/signUp"
           className="font-bold text-emerald-500 hover:text-emerald-400"

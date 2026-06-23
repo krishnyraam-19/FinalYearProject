@@ -29,11 +29,14 @@
 
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function MyItem() {
   const [items, setItems] = useState<any[]>([]);
   const [error, setError] = useState("");
+
+  const router = useRouter();
 
   const pendingItems = items.filter((it) => it.status === "PENDING");
 
@@ -75,6 +78,11 @@ export default function MyItem() {
         const r = await fetch("/api/viewMyItem", {
           method: "POST",
         });
+
+        if (r.status === 401) {
+  router.push("/logIn");
+  return;
+}
 
         if (!r.ok) {
           throw new Error("Unauthorized or failed");

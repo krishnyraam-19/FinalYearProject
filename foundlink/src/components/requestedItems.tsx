@@ -116,6 +116,29 @@ export default function MyContactRequests() {
               {req.status === "PENDING" && (
                 <div className="mt-5 rounded-2xl border border-yellow-500/20 bg-yellow-500/10 p-4 text-yellow-300">
                   Waiting for admin approval
+                
+                <div className="mt-5 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4">
+                  <h3 className="mb-3 text-lg font-black text-emerald-300">
+                    Requester Details
+                  </h3>
+
+                  <div className="space-y-2">
+                    <p className="break-words">
+                      <span className="font-bold">Name:</span>{" "}
+                      {req.requestedBy?.fname} {req.requestedBy?.lname}
+                    </p>
+
+                    <p className="break-all">
+                      <span className="font-bold">Email:</span>{" "}
+                      {req.requestedBy?.email}
+                    </p>
+
+                    <p>
+                      <span className="font-bold">Phone:</span>{" "}
+                      {req.requestedBy?.phone}
+                    </p>
+                  </div>
+                </div>
                 </div>
               )}
 
